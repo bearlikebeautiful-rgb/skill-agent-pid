@@ -7,7 +7,14 @@ import sys
 import json
 import logging
 from typing import Dict, Optional, List
-from anthropic import Anthropic
+
+try:
+    from anthropic import Anthropic
+    ANTHROPIC_AVAILABLE = True
+except ImportError:
+    ANTHROPIC_AVAILABLE = False
+    print("Warning: anthropic package not installed. Claude API features will be disabled.")
+    print("Install with: pip install anthropic")
 
 import config
 from skills.data_collect import collect_step_response
@@ -45,7 +52,7 @@ class SkillAgentPID:
         self.conversation_history = []
         
         # Initialize Claude client
-        if config.CLAUDE_API_KEY:
+        if config.CLAUDE_API_KEY and ANTHROPIC_AVAILABLE:
             try:
                 self.client = Anthropic(api_key=config.CLAUDE_API_KEY)
                 logger.info("Claude API client initialized successfully")
@@ -53,8 +60,12 @@ class SkillAgentPID:
                 logger.error(f"Failed to initialize Claude client: {e}")
                 print("Warning: Claude API not available. Running in manual mode.")
         else:
-            logger.warning("Claude API key not set. Running in manual mode.")
-            print("Warning: Claude API key not set in config. Set CLAUDE_API_KEY environment variable.")
+            if not ANTHROPIC_AVAILABLE:
+                logger.warning("Anthropic package not installed. Running in manual mode.")
+                print("Note: Install anthropic package for Claude API support: pip install anthropic")
+            else:
+                logger.warning("Claude API key not set. Running in manual mode.")
+                print("Warning: Claude API key not set in config. Set CLAUDE_API_KEY environment variable.")
         
         # Workflow state
         self.collected_data = None

@@ -140,7 +140,11 @@ class PerformanceEvaluator:
         """
         try:
             error = np.abs(setpoint - output)
-            iae = np.trapz(error, time)
+            # Use trapezoid for numpy >= 2.0, trapz for older versions
+            try:
+                iae = np.trapezoid(error, time)
+            except AttributeError:
+                iae = np.trapz(error, time)
             return iae
         except Exception as e:
             print(f"Error calculating IAE: {e}")
@@ -160,7 +164,11 @@ class PerformanceEvaluator:
         """
         try:
             error = setpoint - output
-            itse = np.trapz(time * error**2, time)
+            # Use trapezoid for numpy >= 2.0, trapz for older versions
+            try:
+                itse = np.trapezoid(time * error**2, time)
+            except AttributeError:
+                itse = np.trapz(time * error**2, time)
             return itse
         except Exception as e:
             print(f"Error calculating ITSE: {e}")
