@@ -1,6 +1,6 @@
 """
 Main Agent Orchestration Script
-Interfaces with Claude Opus 4.6 LLM for PID tuning workflow orchestration
+Interfaces with Claude LLM for PID tuning workflow orchestration
 """
 import os
 import sys
@@ -75,7 +75,7 @@ class SkillAgentPID:
     
     def ask_claude(self, prompt: str, system_prompt: str = None) -> Optional[str]:
         """
-        Send a query to Claude Opus 4.6
+        Send a query to Claude
         
         Args:
             prompt: User prompt to send

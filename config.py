@@ -12,7 +12,7 @@ load_dotenv()
 # Claude API Configuration
 # ========================================
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY", "")
-CLAUDE_MODEL = "claude-opus-4.6"  # Using Claude Opus 4.6 as specified
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
 CLAUDE_MAX_TOKENS = 4096
 CLAUDE_TEMPERATURE = 0.7
 
