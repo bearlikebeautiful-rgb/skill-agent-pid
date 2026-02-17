@@ -63,7 +63,10 @@ class ParameterDownloader:
             return False
             
         try:
-            self.mqtt_client = mqtt.Client()
+            try:
+                self.mqtt_client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)
+            except (TypeError, AttributeError):
+                self.mqtt_client = mqtt.Client()
             
             if config.MQTT_USERNAME and config.MQTT_PASSWORD:
                 self.mqtt_client.username_pw_set(config.MQTT_USERNAME, config.MQTT_PASSWORD)

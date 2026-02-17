@@ -5,6 +5,8 @@ Demonstrates the Skill-Agent PID framework using synthetic data
 """
 import numpy as np
 import sys
+import tempfile
+import os
 sys.path.insert(0, '.')
 
 from skills import system_identify, param_recommend, code_generate, performance_eval
@@ -104,7 +106,7 @@ def main():
         print("STEP 4: STM32 Code Generation")
         print("="*70)
         
-        output_dir = f"/tmp/stm32_generated_{system_type}"
+        output_dir = os.path.join(tempfile.gettempdir(), f"stm32_generated_{system_type}")
         code_files = code_generate.generate_pid_code(pid_params, output_dir=output_dir)
         
         print(f"\nGenerated {len(code_files)} C code files in {output_dir}/")

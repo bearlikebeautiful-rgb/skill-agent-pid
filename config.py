@@ -3,6 +3,7 @@ Configuration file for Skill-Agent PID Tuning Framework
 Contains API keys, communication settings, and application parameters
 """
 import os
+import platform
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -12,14 +13,15 @@ load_dotenv()
 # Claude API Configuration
 # ========================================
 CLAUDE_API_KEY = os.getenv("CLAUDE_API_KEY", "")
-CLAUDE_MODEL = "claude-opus-4.6"  # Using Claude Opus 4.6 as specified
+CLAUDE_MODEL = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-20250514")
 CLAUDE_MAX_TOKENS = 4096
 CLAUDE_TEMPERATURE = 0.7
 
 # ========================================
 # Serial Communication Settings
 # ========================================
-SERIAL_PORT = os.getenv("SERIAL_PORT", "/dev/ttyUSB0")  # Default USB serial port
+_default_serial = "COM3" if platform.system() == "Windows" else "/dev/ttyUSB0"
+SERIAL_PORT = os.getenv("SERIAL_PORT", _default_serial)  # Default USB serial port
 SERIAL_BAUDRATE = int(os.getenv("SERIAL_BAUDRATE", "115200"))
 SERIAL_TIMEOUT = float(os.getenv("SERIAL_TIMEOUT", "2.0"))
 
@@ -68,5 +70,9 @@ DATA_DIR = "data"
 PLOTS_DIR = "plots"
 
 # Create directories if they don't exist
-os.makedirs(DATA_DIR, exist_ok=True)
-os.makedirs(PLOTS_DIR, exist_ok=True)
+try:
+    os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+except (OSError, PermissionError) as e:
+    # Log the error but don't crash - directories will be created on demand later
+    pass

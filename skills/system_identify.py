@@ -90,13 +90,17 @@ class SystemIdentifier:
             K_guess = y_normalized[-1]
             tau_guess = time[len(time) // 2]
             
+            # Dynamic bounds based on data
+            tau_max = max(10, time[-1] * 2)
+            td_max = max(1, time[-1] * 0.5)
+            
             # Fit model
             popt, _ = curve_fit(
                 self.first_order_step_response,
                 time,
                 y_normalized,
                 p0=[K_guess, tau_guess, 0],
-                bounds=([0, 0.001, 0], [np.inf, 10, 1]),
+                bounds=([0, 0.001, 0], [np.inf, tau_max, td_max]),
                 maxfev=5000
             )
             

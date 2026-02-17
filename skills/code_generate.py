@@ -144,7 +144,10 @@ float PID_Compute(PID_TypeDef *pid, float setpoint, float measurement) {{
     pid->integral += error * pid->sample_time;
     
     // Clamp integral to prevent windup
-    float max_integral = (pid->output_max - pid->output_min) / pid->Ki;
+    float max_integral = 999999.0f;
+    if (pid->Ki > 0.0001f) {{
+        max_integral = (pid->output_max - pid->output_min) / pid->Ki;
+    }}
     if (pid->integral > max_integral) {{
         pid->integral = max_integral;
     }} else if (pid->integral < -max_integral) {{

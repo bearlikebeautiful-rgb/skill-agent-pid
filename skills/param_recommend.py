@@ -112,12 +112,13 @@ class PIDRecommender:
         # Calculate PID gains
         Kp = (2 * desired_zeta * desired_wn - 2 * zeta * wn) / (K * wn**2)
         Ki = (desired_wn**2 - wn**2) / (K * wn**2)
-        Kd = (1 - 2 * desired_zeta * desired_wn * 0) / (K * wn**2)  # Simplified
+        # Derivative gain for desired closed-loop response
+        Kd = (desired_wn**2 / (K * wn**2) - 1) / (desired_wn)
+        Kd = max(0, Kd)
         
         # Ensure positive gains
         Kp = max(0.1, Kp)
         Ki = max(0.01, Ki)
-        Kd = max(0, Kd)
         
         return {
             'Kp': Kp,
