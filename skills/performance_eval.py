@@ -64,6 +64,9 @@ class PerformanceEvaluator:
             overshoot = peak_value - setpoint
             overshoot_percent = (overshoot / setpoint) * 100 if setpoint != 0 else 0
             
+            # Ensure overshoot is not negative
+            overshoot_percent = max(0, overshoot_percent)
+            
             return overshoot_percent, peak_value
         except Exception as e:
             print(f"Error calculating overshoot: {e}")

@@ -70,5 +70,9 @@ DATA_DIR = "data"
 PLOTS_DIR = "plots"
 
 # Create directories if they don't exist
-os.makedirs(DATA_DIR, exist_ok=True)
-os.makedirs(PLOTS_DIR, exist_ok=True)
+try:
+    os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(PLOTS_DIR, exist_ok=True)
+except (OSError, PermissionError) as e:
+    # Log the error but don't crash - directories will be created on demand later
+    pass

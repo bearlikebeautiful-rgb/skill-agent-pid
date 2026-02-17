@@ -40,19 +40,23 @@ logger = logging.getLogger(__name__)
 class SkillAgentPID:
     """Main orchestration agent for PID tuning workflow"""
     
-    def __init__(self, use_mqtt: bool = False):
+    def __init__(self, use_mqtt: bool = False, manual_mode: bool = False):
         """
         Initialize the Skill-Agent PID framework
         
         Args:
             use_mqtt: Use MQTT instead of serial communication
+            manual_mode: Run without Claude API
         """
         self.use_mqtt = use_mqtt
         self.client = None
         self.conversation_history = []
         
         # Initialize Claude client
-        if config.CLAUDE_API_KEY and ANTHROPIC_AVAILABLE:
+        if manual_mode:
+            logger.info("Manual mode enabled - Claude API disabled")
+            print("Running in manual mode (Claude API disabled)")
+        elif config.CLAUDE_API_KEY and ANTHROPIC_AVAILABLE:
             try:
                 self.client = Anthropic(api_key=config.CLAUDE_API_KEY)
                 logger.info("Claude API client initialized successfully")
@@ -477,7 +481,7 @@ def main():
     args = parser.parse_args()
     
     # Create agent
-    agent = SkillAgentPID(use_mqtt=args.mqtt)
+    agent = SkillAgentPID(use_mqtt=args.mqtt, manual_mode=args.manual)
     
     # Run full workflow
     success = agent.run_full_tuning_cycle()
