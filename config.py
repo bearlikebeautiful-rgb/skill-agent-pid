@@ -3,6 +3,7 @@ Configuration file for Skill-Agent PID Tuning Framework
 Contains API keys, communication settings, and application parameters
 """
 import os
+import platform
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -19,7 +20,8 @@ CLAUDE_TEMPERATURE = 0.7
 # ========================================
 # Serial Communication Settings
 # ========================================
-SERIAL_PORT = os.getenv("SERIAL_PORT", "/dev/ttyUSB0")  # Default USB serial port
+_default_serial = "COM3" if platform.system() == "Windows" else "/dev/ttyUSB0"
+SERIAL_PORT = os.getenv("SERIAL_PORT", _default_serial)  # Default USB serial port
 SERIAL_BAUDRATE = int(os.getenv("SERIAL_BAUDRATE", "115200"))
 SERIAL_TIMEOUT = float(os.getenv("SERIAL_TIMEOUT", "2.0"))
 
